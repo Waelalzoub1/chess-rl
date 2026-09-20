@@ -1,0 +1,7 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+checkpoints/train.log
+checkpoints/*.tmp
+runs/
