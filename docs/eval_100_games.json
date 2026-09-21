@@ -1,0 +1,32 @@
+[
+ {
+  "opponent": "random",
+  "games": 100,
+  "sims": 200,
+  "wins": 91,
+  "draws": 8,
+  "losses": 1,
+  "score": 0.95,
+  "wilson95": [
+   0.8882480347279117,
+   0.9784566385436865
+  ],
+  "ckpt_iter": 60,
+  "seconds": 170
+ },
+ {
+  "opponent": "greedy",
+  "games": 100,
+  "sims": 200,
+  "wins": 42,
+  "draws": 56,
+  "losses": 2,
+  "score": 0.7,
+  "wilson95": [
+   0.6041496156718804,
+   0.7810524613377188
+  ],
+  "ckpt_iter": 60,
+  "seconds": 193
+ }
+]

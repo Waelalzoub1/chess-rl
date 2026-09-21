@@ -1,0 +1,17 @@
+[
+ {
+  "opponent": "random",
+  "games": 400,
+  "sims": 200,
+  "wins": 381,
+  "draws": 19,
+  "losses": 0,
+  "score": 0.97625,
+  "wilson95": [
+   0.9561927259609302,
+   0.987246483867874
+  ],
+  "ckpt_iter": 60,
+  "seconds": 575
+ }
+]
