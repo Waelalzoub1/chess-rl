@@ -91,5 +91,29 @@ class SearchTest(unittest.TestCase):
         self.assertLess(q_losing, -0.2)
 
 
+class RepetitionTest(unittest.TestCase):
+    def test_search_scores_a_repeated_position_as_a_draw(self):
+        from chessrl import batched
+        # K+R vs K, white to move and winning. Shuffle Ra1-a2-a1 and the black king so that the
+        # position after Ra2 has already occurred in the game.
+        b = chess.Board("7k/8/6K1/8/8/8/8/R7 w - - 0 1")
+        for uci in ["a1a2", "h8g8", "a2a1", "g8h8"]:
+            b.push_uci(uci)
+        keys = set()
+        h = b.copy()
+        while h.move_stack:
+            h.pop()
+            keys.add(batched.position_key(h))
+        c = b.copy(stack=False)
+        c.push_uci("a1a2")                                   # recreates an earlier position
+        value, legal = batched.leaf_status(c, keys, {batched.position_key(b)})
+        self.assertEqual(value, 0.0)
+        self.assertIsNone(legal)
+        c = b.copy(stack=False)
+        c.push_uci("a1a8")                                   # a new position: checkmate, not a draw
+        value, _ = batched.leaf_status(c, keys, {batched.position_key(b)})
+        self.assertEqual(value, -1.0)
+
+
 if __name__ == "__main__":
     unittest.main()

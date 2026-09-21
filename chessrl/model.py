@@ -24,6 +24,7 @@ class ResBlock(nn.Module):
 class PolicyValueNet(nn.Module):
     def __init__(self, channels=64, blocks=4):
         super().__init__()
+        self.channels, self.n_blocks = channels, blocks
         self.stem = nn.Sequential(
             nn.Conv2d(N_PLANES, channels, 3, padding=1, bias=False),
             nn.BatchNorm2d(channels),
@@ -53,18 +54,22 @@ class PolicyValueNet(nn.Module):
         return self.policy_head(h), self.value_head(h).squeeze(-1)
 
 
-def load_model(ckpt_path=None):
-    """Builds the net, loading weights from a checkpoint if it exists.
+def load_model(ckpt_path=None, device="cpu", channels=64, blocks=4):
+    """Builds the net, loading weights (and the net size) from a checkpoint if it exists.
 
     Returns (model, iteration)."""
-    model = PolicyValueNet()
-    iteration = 0
+    iteration, state = 0, None
     if ckpt_path is not None:
         try:
             ckpt = torch.load(ckpt_path, map_location="cpu", weights_only=True)
-            model.load_state_dict(ckpt["model"])
+            state = ckpt["model"]
             iteration = ckpt.get("iter", 0)
+            channels = ckpt.get("channels", 64)
+            blocks = ckpt.get("blocks", 4)
         except FileNotFoundError:
             pass
-    model.eval()
+    model = PolicyValueNet(channels=channels, blocks=blocks)
+    if state is not None:
+        model.load_state_dict(state)
+    model.to(device).eval()
     return model, iteration
